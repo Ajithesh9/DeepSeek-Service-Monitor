@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DeepSeek Service Status</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>DeepSeek Service Status</h1>
+        <p>Real-time monitoring of AI chat services</p>
+      </header>
+
+      <div class="status-container">
+        <div class="status-card">
+          <h2>
+            API Services <span class="status-indicator operational"></span>
+          </h2>
+          <p>Status: Operational</p>
+          <p>Last checked: <span id="last-checked">Loading...</span></p>
+        </div>
+
+        <div class="status-card">
+          <h2>
+            Chat Interface <span class="status-indicator operational"></span>
+          </h2>
+          <p>Status: Operational</p>
+          <p>Response time: <span id="response-time">Loading...</span></p>
+        </div>
+      </div>
+
+      <div class="incident-list">
+        <h2>Recent Incidents</h2>
+        <div id="incidents" class="loading">Loading incident history...</div>
+      </div>
+    </div>
+
+    <script src="/script.js"></script>
+  </body>
+</html>
