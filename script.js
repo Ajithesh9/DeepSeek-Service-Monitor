@@ -1,3 +1,4 @@
+// Configuration
 const RSS_FEED_URL = "https://status.deepseek.com/history.rss";
 const API_KEY = ""; // Get from https://rss2json.com/
 
