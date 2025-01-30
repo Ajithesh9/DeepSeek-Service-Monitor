@@ -103,6 +103,60 @@ function handleError(error) {
   `;
 }
 
+// Easter Egg Configuration
+let isEggActive = false;
+let lastTriggerTime = 0;
+const EGG_DURATION = 4000; // 4 seconds
+const EGG_COOLDOWN = 8000; // 8 seconds
+let clickCount = 0;
+
+document.addEventListener("click", () => {
+  if (isEggActive || Date.now() - lastTriggerTime < EGG_COOLDOWN) return;
+
+  clickCount++;
+  clearTimeout(window.clickTimer);
+  window.clickTimer = setTimeout(() => (clickCount = 0), 1000);
+
+  if (clickCount === 3) {
+    triggerEasterEgg();
+    clickCount = 0;
+  }
+});
+
+function triggerEasterEgg() {
+  isEggActive = true;
+  lastTriggerTime = Date.now();
+
+  const header = document.querySelector(".header");
+  const existingMessage = header.querySelector(".easter-egg-message");
+  if (existingMessage) existingMessage.remove();
+
+  // Reduced saturation effect
+  header.style.filter = "saturate(0.7)";
+  header.style.animation = "rainbow 2s infinite";
+
+  const message = document.createElement("div");
+  message.className = "easter-egg-message";
+  message.textContent = "🎉 You found the Easter egg! 🎉";
+  header.appendChild(message);
+
+  setTimeout(() => {
+    message.style.opacity = "0";
+    setTimeout(() => {
+      header.style.filter = "";
+      header.style.animation = "";
+      message.remove();
+      isEggActive = false;
+    }, 1000); // Fade-out duration
+  }, EGG_DURATION);
+
+  // Play sound
+  const audio = new Audio(
+    "https://assets.mixkit.co/active_storage/sfx/2210/2210-preview.mp3"
+  );
+  audio.play();
+}
+
 // Initial load
 document.addEventListener("DOMContentLoaded", () => {
   fetchStatus();
