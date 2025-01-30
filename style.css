@@ -98,6 +98,7 @@ body {
 
 .incident-item:hover {
   background: rgba(245, 245, 245, 0.9);
+  border-radius: 10px;
   transform: translateX(5px);
 }
 .incident-item:last-child {
