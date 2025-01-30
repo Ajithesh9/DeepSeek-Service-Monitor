@@ -1,5 +1,5 @@
-// Configuration
 const RSS_FEED_URL = "https://status.deepseek.com/history.rss";
+const API_KEY = ""; // Get from https://rss2json.com/
 
 // Status indicators
 const statusIndicators = {
@@ -12,6 +12,13 @@ const statusIndicators = {
 const lastCheckedElement = document.getElementById("last-checked");
 const responseTimeElement = document.getElementById("response-time");
 const incidentsElement = document.getElementById("incidents");
+
+// Easter Egg Configuration
+let isEggActive = false;
+let lastTriggerTime = 0;
+const EGG_DURATION = 4000; // 4 seconds
+const EGG_COOLDOWN = 8000; // 8 seconds
+let clickCount = 0;
 
 // Helper function for loading states
 const toggleLoading = (element, isLoading) => {
@@ -27,10 +34,12 @@ async function fetchStatus() {
     toggleLoading(responseTimeElement, true);
     toggleLoading(incidentsElement, true);
 
-    // Call YOUR secure endpoint instead of the external API
-    const response = await fetch("/.netlify/functions/fetchStatus");
+    const response = await fetch(
+      `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(
+        RSS_FEED_URL
+      )}&api_key=${API_KEY}`
+    );
 
-    // Check if the response is OK
     if (!response.ok) {
       throw new Error(`Failed to fetch status: ${response.statusText}`);
     }
@@ -45,7 +54,6 @@ async function fetchStatus() {
   } catch (error) {
     handleError(error);
   } finally {
-    // Always remove loading states, even if there's an error
     toggleLoading(lastCheckedElement, false);
     toggleLoading(responseTimeElement, false);
     toggleLoading(incidentsElement, false);
@@ -59,20 +67,11 @@ function updateStatusUI(incidents) {
 
   incidents.forEach((incident) => {
     const currentDate = new Date(incident.pubDate).toLocaleDateString();
-    if (previousDate && previousDate !== currentDate) {
-      const divider = document.createElement("div");
-      divider.className = "date-divider";
-      divider.setAttribute("data-date", currentDate);
-      incidentsElement.appendChild(divider);
-    }
-    previousDate = currentDate;
-
     const incidentElement = document.createElement("div");
     incidentElement.className = "incident-item";
-    incidentElement.setAttribute("data-date", currentDate);
     incidentElement.innerHTML = `
       <h3>${incident.title}</h3>
-      <p class="incident-date">📅 ${currentDate}</p>
+      <p>${currentDate}</p>
       <p>${incident.description}</p>
     `;
     incidentsElement.appendChild(incidentElement);
@@ -103,19 +102,13 @@ function handleError(error) {
   `;
 }
 
-// Easter Egg Configuration
-let isEggActive = false;
-let lastTriggerTime = 0;
-const EGG_DURATION = 4000; // 4 seconds
-const EGG_COOLDOWN = 8000; // 8 seconds
-let clickCount = 0;
-
+// Easter Egg Handler
 document.addEventListener("click", () => {
-  if (isEggActive || Date.now() - lastTriggerTime < EGG_COOLDOWN) return;
-
+  if (isEggActive || (Date.now() - lastTriggerTime) < EGG_COOLDOWN) return;
+  
   clickCount++;
   clearTimeout(window.clickTimer);
-  window.clickTimer = setTimeout(() => (clickCount = 0), 1000);
+  window.clickTimer = setTimeout(() => clickCount = 0, 1000);
 
   if (clickCount === 3) {
     triggerEasterEgg();
@@ -126,12 +119,11 @@ document.addEventListener("click", () => {
 function triggerEasterEgg() {
   isEggActive = true;
   lastTriggerTime = Date.now();
-
+  
   const header = document.querySelector(".header");
   const existingMessage = header.querySelector(".easter-egg-message");
   if (existingMessage) existingMessage.remove();
 
-  // Reduced saturation effect
   header.style.filter = "saturate(0.7)";
   header.style.animation = "rainbow 2s infinite";
 
@@ -147,19 +139,17 @@ function triggerEasterEgg() {
       header.style.animation = "";
       message.remove();
       isEggActive = false;
-    }, 1000); // Fade-out duration
+    }, 1000);
   }, EGG_DURATION);
 
-  // Play sound
-  const audio = new Audio(
-    "https://assets.mixkit.co/active_storage/sfx/2210/2210-preview.mp3"
-  );
+  // Optional: Add sound effect
+  const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2210/2210-preview.mp3");
   audio.play();
 }
 
 // Initial load
 document.addEventListener("DOMContentLoaded", () => {
   fetchStatus();
-  setInterval(fetchStatus, 300000); // Refresh every 5 minutes
-  setInterval(simulateStatusUpdates, 10000); // Simulate updates every 10 seconds
+  setInterval(fetchStatus, 300000);
+  setInterval(simulateStatusUpdates, 10000);
 });
