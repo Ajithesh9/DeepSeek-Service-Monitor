@@ -8,6 +8,7 @@
   </head>
   <body>
     <div class="container">
+      <div id="particles-js"></div>
       <header class="header">
         <h1>DeepSeek Service Status</h1>
         <p>Real-time monitoring of AI chat services</p>
@@ -33,10 +34,29 @@
 
       <div class="incident-list">
         <h2>Recent Incidents</h2>
-        <div id="incidents" class="loading">Loading incident history...</div>
+        <div id="incidents">Loading incident history...</div>
       </div>
     </div>
 
-    <script src="/script.js"></script>
+    <footer class="minimal-footer">
+      <div class="footer-content">
+        <svg class="code-icon" viewBox="0 0 24 24" width="20" height="20">
+          <path
+            fill="currentColor"
+            d="M14.6 16.6l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4zm-5.2 0L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4z"
+          />
+        </svg>
+        <span
+          >Coded by
+          <a
+            href="https://github.com/Ajithesh9"
+            target="_blank"
+            class="github-link"
+            >Ajithesh9</a
+          >
+        </span>
+      </div>
+    </footer>
+    <script src="script.js"></script>
   </body>
 </html>
