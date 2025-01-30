@@ -1,6 +1,6 @@
 // Configuration
 const RSS_FEED_URL = "https://status.deepseek.com/history.rss";
-// Get from https://rss2json.com/
+
 // Status indicators
 const statusIndicators = {
   operational: "operational",
@@ -28,7 +28,7 @@ async function fetchStatus() {
     toggleLoading(incidentsElement, true);
 
     // Call YOUR secure endpoint instead of the external API
-    const response = await fetch("/.netlify/functions/fetchStatus");
+    const response = await fetch("/api/fetchStatus");
 
     // Check if the response is OK
     if (!response.ok) {
@@ -55,24 +55,13 @@ async function fetchStatus() {
 // Update UI with status data
 function updateStatusUI(incidents) {
   incidentsElement.innerHTML = "";
-  let previousDate = null;
 
   incidents.forEach((incident) => {
-    const currentDate = new Date(incident.pubDate).toLocaleDateString();
-    if (previousDate && previousDate !== currentDate) {
-      const divider = document.createElement("div");
-      divider.className = "date-divider";
-      divider.setAttribute("data-date", currentDate);
-      incidentsElement.appendChild(divider);
-    }
-    previousDate = currentDate;
-
     const incidentElement = document.createElement("div");
     incidentElement.className = "incident-item";
-    incidentElement.setAttribute("data-date", currentDate);
     incidentElement.innerHTML = `
       <h3>${incident.title}</h3>
-      <p class="incident-date">📅 ${currentDate}</p>
+      <p>${new Date(incident.pubDate).toLocaleDateString()}</p>
       <p>${incident.description}</p>
     `;
     incidentsElement.appendChild(incidentElement);
