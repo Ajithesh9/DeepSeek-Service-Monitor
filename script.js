@@ -1,13 +1,11 @@
 const RSS_FEED_URL = "https://status.deepseek.com/history.rss";
 const API_KEY = ""; // Get from https://rss2json.com/
-
 // Status indicators
 const statusIndicators = {
   operational: "operational",
   degraded: "degraded",
   outage: "outage",
 };
-
 // DOM Elements
 const lastCheckedElement = document.getElementById("last-checked");
 const responseTimeElement = document.getElementById("response-time");
